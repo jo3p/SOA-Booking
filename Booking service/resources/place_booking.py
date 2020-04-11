@@ -16,7 +16,8 @@ placedBookings = [
     }
 ]
 
-class PlaceBooking(Resource):
+
+class PlacedBookings(Resource):
 
     def get(self, booking_id):
         for booking in placedBookings:
@@ -24,8 +25,7 @@ class PlaceBooking(Resource):
                 return booking, 200
         return {'message': 'Booking not found'}, 404
 
-
-    def put(self, booking_id):                          # TODO: Uitzoeken wat dit precies doet.
+    def put(self, booking_id):  # TODO: Uitzoeken wat dit precies doet en aanpassen
         parser = reqparse.RequestParser()
         parser.add_argument('rating', type=int, help='Rate to charge for this resource')
         args = parser.parse_args(strict=True)
@@ -34,7 +34,6 @@ class PlaceBooking(Resource):
             if booking_id == booking['booking_id']:
                 booking['rating'] = args['rating']
                 return booking, 200
-
 
     def delete(self, booking_id):
         booking_to_be_deleted = None
@@ -49,7 +48,7 @@ class PlaceBooking(Resource):
         return {'message': 'Booking to delete not found'}, 404
 
 
-class PlaceBookings(Resource):
+class PlaceBooking(Resource):
 
     def post(self):
         booking_to_be_added = request.get_json(force=True)

@@ -8,13 +8,6 @@ services:
     ports:
       - 5001:5000
     container_name: booking-service-container
-  availability-service:
-    build: ./availability-service/
-    volumes:
-      - ./availability-service:/usr/src/app
-    ports:
-      - 5002:5000
-    container_name: availability-service-container
   db:
     environment:
       - ACCEPT_EULA=Y

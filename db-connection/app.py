@@ -1,6 +1,7 @@
 import pyodbc
-print("About to insert Hagi:")
-#Add your own SQL Server IP address, PORT, UID, PWD and Database
+import pandas as pd
+
+print("Connecting to master database")
 conn = pyodbc.connect(
     'DRIVER={FreeTDS};'
     'SERVER=db;'
@@ -8,12 +9,34 @@ conn = pyodbc.connect(
     'DATABASE=master;'
     'UID=SA;'
     'PWD=Innov@t1onS', autocommit=True)
+print("Connected to master")
 
+print("Creating new Database")
 cur = conn.cursor()
-#This is just an example
-cur.execute(
-    f"INSERT INTO [FootballPLayers] ([Name],[Age],[Job],[Country],[Married],[YearsEmployed]) VALUES ('Gheorghe Hagi','55','Manager','Romania','Y','6')")
-conn.commit()
-print('Should have inserted Hagi')
+cur.execute("CREATE DATABASE [Availability]")
+print("Database Availability created")
 cur.close()
 conn.close()
+
+print("Connecting to Availability Database")
+conn = pyodbc.connect(
+    'DRIVER={FreeTDS};'
+    'SERVER=db;'
+    'PORT=1433;'
+    'DATABASE=Availability;'
+    'UID=SA;'
+    'PWD=Innov@t1onS', autocommit=True)
+print("Connected to availability")
+
+cur = conn.cursor()
+cur.execute("CREATE TABLE Availability(Date date, Accomodation_ID int, Accomodation_name varchar(30), City varchar(30), "
+            "Country varchar(30),Availability int)")
+conn.commit()
+print("Database Availability created")
+
+cur.execute(f"INSERT INTO [Availability] ([Date],[Accomodation_ID],[Accomodation_name],[City],[Country],"
+            f"[Availability]) VALUES ('2020-05-18', 1,'Amstel Hotel','Amsterdam','The Netherlands',1)")
+conn.commit()
+
+df = pd.DataFrame(cur.execute('SELECT * FROM [Availability]'))
+print(df)

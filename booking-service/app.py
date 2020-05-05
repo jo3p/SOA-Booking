@@ -1,3 +1,5 @@
+from flask import Flask
+from flask_restful import Api
 from flask_restful import Resource, reqparse
 from flask import request
 
@@ -8,7 +10,7 @@ placedBookings = [
         "hotel_id": 654772,
         "hotel_name": "Grand Hotel Amrâth Kurhaus",
         "address": {
-            "postcode": "2586 CK",
+            "postcode": "5038 XH",
             "street": "Gevers Deynootplein",
             "houseNo": 30,
             "city": "Den Haag"
@@ -58,3 +60,13 @@ class PlaceBooking(Resource):
                 return {'message': 'Record with booking_id {} already exists.'.format(booking_id)}, 500
         placedBookings.append(booking_to_be_added)
         return booking_to_be_added, 201
+
+
+
+app = Flask(__name__)
+api = Api(app)
+
+api.add_resource(PlaceBooking, '/place_booking/', methods=['POST'])
+api.add_resource(PlacedBookings, '/placed_bookings/<int:booking_id>', methods=['GET', 'PUT', 'DELETE'])
+
+app.run(host='0.0.0.0', port=5000, debug=True)

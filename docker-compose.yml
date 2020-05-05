@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+  booking-service:
+    build: ./booking-service/
+    volumes:
+      - ./booking-service:/usr/src/app
+    ports:
+      - 5001:5000
+    container_name: booking-service-container
+  availability-service:
+    build: ./availability-service/
+    volumes:
+      - ./availability-service:/usr/src/app
+    ports:
+      - 5002:5000
+    container_name: availability-service-container
+  db:
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=Innov@t1onS
+    ports:
+      - '1433:1433'
+    image: 'mcr.microsoft.com/mssql/server'
+    container_name: db-container
+  db-connection:
+    build: db-connection/
+    volumes:
+      - ./db-connection:/usr/src/app
+    depends_on:
+      - 'db'
+    container_name: db-connection-container

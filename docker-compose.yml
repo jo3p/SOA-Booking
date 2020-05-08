@@ -20,6 +20,8 @@ services:
     build: db-connection/
     volumes:
       - ./db-connection:/usr/src/app
+    ports:
+      - 5002:5000
 #    depends_on:
 #      - 'db'
     container_name: db-connection-container

@@ -1,36 +1,14 @@
-import pyodbc
-import pandas as pd
-from datetime import datetime
+from flask import Flask
+from flask_restful import Api
 
+from resources.availability import AvailableAccomodations
 
-start_date = '2020-06-01'
-end_date = '2020-06-04'
-city = 'Amsterdam'
-country = 'The Netherlands'
-n_persons = 3
+app = Flask(__name__)
+api = Api(app)
 
-start_date_obj = datetime.strptime(start_date, '%Y-%m-%d')
-end_date_obj = datetime.strptime(end_date, '%Y-%m-%d')
-length_stay = (end_date_obj - start_date_obj).days + 1
+api.add_resource(AvailableAccomodations, '/availability/', methods=['POST'])
 
-conn = pyodbc.connect(
-    'DRIVER={FreeTDS};'
-    'SERVER=34.91.7.86;'
-    'PORT=1433;'
-    'DATABASE=IS-database;'
-    'UID=SA;'
-    'PWD=Innov@t1onS', autocommit=True)
+app.run(host='0.0.0.0', port=5000, debug=True)
+#app.run(port=81, debug=True)
 
-sql_query = f"SELECT * " \
-            f"FROM Accomodations " \
-            f"WHERE city = '{city}' AND country = '{country}' AND accomodation_id IN (" \
-            f"SELECT accomodation_id " \
-            f"FROM Availability " \
-            f"WHERE capacity >= {n_persons} AND date BETWEEN '{start_date}' AND '{end_date}' " \
-            f"GROUP BY accomodation_id " \
-            f"HAVING COUNT(accomodation_id) = {length_stay});"
-
-query_result = pd.read_sql(sql_query, conn)
-conn.close()
-
-print(query_result)
+# In the context of servers, 0.0.0.0 can mean "all IPv4 addresses on the local machine".

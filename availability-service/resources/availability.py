@@ -3,7 +3,6 @@ from flask import request
 import pyodbc
 import pandas as pd
 from datetime import datetime
-import json
 
 '''
 Only works for post request with json body similar to:

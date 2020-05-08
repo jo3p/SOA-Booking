@@ -3,7 +3,7 @@ FROM python:3
 WORKDIR /usr/src/app
 
 ADD requirements.txt .
-ADD app.py .
+ADD run.py .
 
 # install FreeTDS and dependencies
 RUN apt-get update \
@@ -22,5 +22,5 @@ Setup = /usr/lib/x86_64-linux-gnu/odbc/libtdsS.so" >> /etc/odbcinst.ini
 
 RUN pip install -r requirements.txt
 
-CMD ["python","-i","app.py"]
+CMD ["python","-i","run.py"]
 #CMD tail -f /dev/null

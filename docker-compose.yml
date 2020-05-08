@@ -17,11 +17,11 @@ services:
 #    image: 'mcr.microsoft.com/mssql/server'
 #    container_name: db-container
   db-connection:
-    build: db-connection/
+    build: availability-service/
     volumes:
-      - ./db-connection:/usr/src/app
+      - ./availability-service:/usr/src/app
     ports:
       - 5002:5000
 #    depends_on:
 #      - 'db'
-    container_name: db-connection-container
+    container_name: availability-service-container

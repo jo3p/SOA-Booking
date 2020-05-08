@@ -21,7 +21,7 @@ class AvailableAccomodations(Resource):
     def post(self):
         r = request.get_json(force=True)
         result = QueryDB.retrieve_query(r["start_date"],r["end_date"],r["city"],r["country"],r["n_persons"]).to_dict(orient='records')
-        return result, 201  # 201 Created HTTP status code
+        return result, 201  # 201 Created HTTP status code TODO: moet dit 201 "Created" zijn?
 
 class QueryDB():
 

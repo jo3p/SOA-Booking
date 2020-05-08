@@ -16,7 +16,7 @@ services:
 #      - '1433:1433'
 #    image: 'mcr.microsoft.com/mssql/server'
 #    container_name: db-container
-  db-connection:
+  availability-service:
     build: availability-service/
     volumes:
       - ./availability-service:/usr/src/app

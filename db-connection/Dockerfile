@@ -22,5 +22,5 @@ Setup = /usr/lib/x86_64-linux-gnu/odbc/libtdsS.so" >> /etc/odbcinst.ini
 
 RUN pip install -r requirements.txt
 
-CMD ["python","-i","app.py"]
-# CMD tail -f /dev/null
+# CMD ["python","-i","app.py"]
+CMD tail -f /dev/null

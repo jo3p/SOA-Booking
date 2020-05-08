@@ -1,7 +1,18 @@
 import pyodbc
 import pandas as pd
+from datetime import datetime
 
-print("Connecting to database")
+
+start_date = '2020-06-01'
+end_date = '2020-06-04'
+city = 'Amsterdam'
+country = 'The Netherlands'
+n_persons = 3
+
+start_date_obj = datetime.strptime(start_date, '%Y-%m-%d')
+end_date_obj = datetime.strptime(end_date, '%Y-%m-%d')
+length_stay = (end_date_obj - start_date_obj).days + 1
+
 conn = pyodbc.connect(
     'DRIVER={FreeTDS};'
     'SERVER=34.91.7.86;'
@@ -9,35 +20,17 @@ conn = pyodbc.connect(
     'DATABASE=IS-database;'
     'UID=SA;'
     'PWD=Innov@t1onS', autocommit=True)
-print("Connected to Database")
 
-# print("Creating new Database")
-# cur = conn.cursor()
-# cur.execute("CREATE DATABASE [Availability]")
-# print("Database Availability created")
-# cur.close()
-# conn.close()
-#
-# print("Connecting to Availability Database")
-# conn = pyodbc.connect(
-#     'DRIVER={FreeTDS};'
-#     'SERVER=db;'
-#     'PORT=1433;'
-#     'DATABASE=Availability;'
-#     'UID=SA;'
-#     'PWD=Innov@t1onS', autocommit=True)
-# print("Connected to availability")
+sql_query = f"SELECT * " \
+            f"FROM Accomodations " \
+            f"WHERE city = '{city}' AND country = '{country}' AND accomodation_id IN (" \
+            f"SELECT accomodation_id " \
+            f"FROM Availability " \
+            f"WHERE capacity >= {n_persons} AND date BETWEEN '{start_date}' AND '{end_date}' " \
+            f"GROUP BY accomodation_id " \
+            f"HAVING COUNT(accomodation_id) = {length_stay});"
 
-# cur = conn.cursor()
-# cur.execute("CREATE TABLE Availability(Date date, Accomodation_ID int, Accomodation_name varchar(30), City varchar(30), "
-#             "Country varchar(30),Availability int)")
-# conn.commit()
-# print("Database Availability created")
-#
-# cur.execute(f"INSERT INTO [Availability] ([Date],[Accomodation_ID],[Accomodation_name],[City],[Country],"
-#             f"[Availability]) VALUES ('2020-05-18', 1,'Amstel Hotel','Amsterdam','The Netherlands',1)")
-# conn.commit()
+query_result = pd.read_sql(sql_query, conn)
+conn.close()
 
-cur = conn.cursor()
-df = pd.DataFrame(cur.execute('SELECT * FROM [Availability]'))
-print(df)
+print(query_result)

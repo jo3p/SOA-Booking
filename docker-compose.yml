@@ -8,18 +8,18 @@ services:
     ports:
       - 5001:5000
     container_name: booking-service-container
-  db:
-    environment:
-      - ACCEPT_EULA=Y
-      - SA_PASSWORD=Innov@t1onS
-    ports:
-      - '1433:1433'
-    image: 'mcr.microsoft.com/mssql/server'
-    container_name: db-container
+#  db:
+#    environment:
+#      - ACCEPT_EULA=Y
+#      - SA_PASSWORD=Innov@t1onS
+#    ports:
+#      - '1433:1433'
+#    image: 'mcr.microsoft.com/mssql/server'
+#    container_name: db-container
   db-connection:
     build: db-connection/
     volumes:
       - ./db-connection:/usr/src/app
-    depends_on:
-      - 'db'
+#    depends_on:
+#      - 'db'
     container_name: db-connection-container

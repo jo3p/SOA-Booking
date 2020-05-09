@@ -8,6 +8,27 @@ services:
     ports:
       - 5001:5000
     container_name: booking-service-container
+  availability-service:
+    build: availability-service/
+    volumes:
+      - ./availability-service:/usr/src/app
+    ports:
+      - 5002:5000
+    container_name: availability-service-container
+  pricing-service:
+    build: pricing-service/
+    volumes:
+      - ./pricing-service:/usr/src/app
+    ports:
+      - 5003:5000
+    container_name: pricing-service-container
+  ranking-service:
+    build: ranking-service/
+    volumes:
+      - ./ranking-service:/usr/src/app
+    ports:
+      - 5004:5000
+    container_name: ranking-service-container
 #  db:
 #    environment:
 #      - ACCEPT_EULA=Y
@@ -16,12 +37,3 @@ services:
 #      - '1433:1433'
 #    image: 'mcr.microsoft.com/mssql/server'
 #    container_name: db-container
-  availability-service:
-    build: availability-service/
-    volumes:
-      - ./availability-service:/usr/src/app
-    ports:
-      - 5002:5000
-#    depends_on:
-#      - 'db'
-    container_name: availability-service-container

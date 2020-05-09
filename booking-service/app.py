@@ -27,7 +27,7 @@ class PlacedBookings(Resource):
                 return booking, 200
         return {'message': 'Booking not found'}, 404
 
-    def put(self, booking_id):  # TODO: Uitzoeken wat dit precies doet en aanpassen
+    def put(self, booking_id):
         parser = reqparse.RequestParser()
         parser.add_argument('rating', type=int, help='Rate to charge for this resource')
         args = parser.parse_args(strict=True)

@@ -20,17 +20,21 @@ Only works for post request with json body similar to:
 class AvailableAccomodations(Resource):
     def post(self):
         r = request.get_json(force=True)
-        result = QueryDB.retrieve_query(r["start_date"],r["end_date"],r["city"],r["country"],r["n_persons"]).to_dict(orient='records')
+        result = QueryDB.retrieve_query(r["start_date"],
+                                        r["end_date"],
+                                        r["city"],
+                                        r["country"],
+                                        r["n_persons"]).to_dict(orient='records')
         return result, 200
 
-class QueryDB():
 
+class QueryDB:
     def retrieve_query(start_date, end_date, city, country, n_persons):
         start_date_obj = datetime.strptime(start_date, '%Y-%m-%d')
         end_date_obj = datetime.strptime(end_date, '%Y-%m-%d')
         length_stay = (end_date_obj - start_date_obj).days + 1
 
-        conn = pyodbc.connect(
+        connection = pyodbc.connect(
             'DRIVER={FreeTDS};'
             'SERVER=34.91.7.86;'
             'PORT=1433;'
@@ -38,18 +42,17 @@ class QueryDB():
             'UID=SA;'
             'PWD=Innov@t1onS', autocommit=True)
 
-        sql_query = f"SELECT * " \
-                    f"FROM Accomodations " \
-                    f"WHERE city = '{city}' AND country = '{country}' AND accomodation_id IN (" \
-                    f"SELECT accomodation_id " \
-                    f"FROM Availability " \
-                    f"WHERE capacity >= {n_persons} AND date BETWEEN '{start_date}' AND '{end_date}' " \
-                    f"GROUP BY accomodation_id " \
-                    f"HAVING COUNT(accomodation_id) = {length_stay});"
+        query_parameters = {
+            "start_date": start_date,
+            "end_date": end_date,
+            "city": city,
+            "country": country,
+            "n_persons": n_persons,
+            "length_stay": length_stay
+        }
 
-        query_result = pd.read_sql(sql_query, conn)
-        conn.close()
+        filled_sql_query = open('resources/availability.sql', 'r').read().format(**query_parameters)
+        query_result = pd.read_sql(filled_sql_query, connection)
+        connection.close()
 
         return query_result
-
-

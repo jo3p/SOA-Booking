@@ -1,9 +1,26 @@
-# Using lightweight alpine image
-FROM python:3.7.7-alpine3.10
-# Defining working directory and copy the requirements file
+FROM python:3
+
 WORKDIR /usr/src/app
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-COPY . .
-EXPOSE 5000
-CMD ["python3","app.py"]
+
+ADD requirements.txt .
+ADD run.py .
+
+# install FreeTDS and dependencies
+RUN apt-get update \
+ && apt-get install unixodbc -y \
+ && apt-get install unixodbc-dev -y \
+ && apt-get install freetds-dev -y \
+ && apt-get install freetds-bin -y \
+ && apt-get install tdsodbc -y \
+ && apt-get install --reinstall build-essential -y
+
+# populate "ocbcinst.ini" as this is where ODBC driver config sits
+RUN echo "[FreeTDS]\n\
+Description = FreeTDS Driver\n\
+Driver = /usr/lib/x86_64-linux-gnu/odbc/libtdsodbc.so\n\
+Setup = /usr/lib/x86_64-linux-gnu/odbc/libtdsS.so" >> /etc/odbcinst.ini
+
+RUN pip install -r requirements.txt
+
+CMD ["python","-i","run.py"]
+#CMD tail -f /dev/null

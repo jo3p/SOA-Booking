@@ -51,7 +51,7 @@ class QueryDB:
             "length_stay": length_stay
         }
 
-        filled_sql_query = open('resources/availability.sql', 'r').read().format(**query_parameters)
+        filled_sql_query = open('resources/price.sql', 'r').read().format(**query_parameters)
         query_result = pd.read_sql(filled_sql_query, connection)
         connection.close()
 

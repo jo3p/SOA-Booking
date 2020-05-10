@@ -16,7 +16,6 @@ Only works for post request with json body similar to:
 }
 '''
 
-
 class AvailableAccomodations(Resource):
     def post(self):
         r = request.get_json(force=True)
@@ -27,6 +26,10 @@ class AvailableAccomodations(Resource):
                                         r["n_persons"]).to_dict(orient='records')
         return result, 200
 
+class AllAccomodations(Resource):
+    def get(self):
+        result = QueryDB.retrieve_all().to_dict(orient='records')
+        return result
 
 class QueryDB:
     def retrieve_query(start_date, end_date, city, country, n_persons):
@@ -56,3 +59,19 @@ class QueryDB:
         connection.close()
 
         return query_result
+
+    def retrieve_all():
+        connection = pyodbc.connect(
+            'DRIVER={FreeTDS};'
+            'SERVER=34.91.7.86;'
+            'PORT=1433;'
+            'DATABASE=IS-database;'
+            'UID=SA;'
+            'PWD=Innov@t1onS', autocommit=True)
+
+        filled_sql_query = open('resources/allavailability.sql', 'r').read()
+        query_result = pd.read_sql(filled_sql_query, connection)
+        connection.close()
+
+        return query_result
+

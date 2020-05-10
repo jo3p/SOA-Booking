@@ -29,6 +29,13 @@ services:
     ports:
       - 5004:5000
     container_name: ranking-service-container
+  refund-service:
+    build: refund-service/
+    volumes:
+      - ./refund-service:/usr/src/app
+    ports:
+      - 5005:5000
+    container_name: refund-service-container
 #  db:
 #    environment:
 #      - ACCEPT_EULA=Y

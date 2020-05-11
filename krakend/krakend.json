@@ -8,20 +8,25 @@
       "endpoint": "/query/",
       "method": "GET",
       "output_encoding": "string",
-      "extra_config": {
-        "github.com/devopsfaith/krakend/proxy": {
-        }
-      },
       "backend": [
         {
           "url_pattern": "/availability/accomodations/",
+          "encoding": "json",
+          "method": "GET",
+          "host": ["http://availability-service:5000/"]
+        },
+        {
+          "url_pattern": "/price/{resp0_start_date}/{resp0_end_date}/{resp0_accomodations}",
           "encoding": "string",
           "method": "GET",
-          "host": [
-            "http://availability-service:5000/"
-          ]
+          "host": ["http://pricing-service:5000/"]
         }
-      ]
+      ],
+      "extra_config": {
+        "github.com/devopsfaith/krakend/proxy": {
+          "sequential": true
+        }
+      }
     }
   ]
 }

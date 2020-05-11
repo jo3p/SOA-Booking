@@ -1,4 +1,4 @@
-SELECT *
+SELECT accomodation_id
 FROM Accomodations
 WHERE city = '{city}' AND
       country = '{country}' AND

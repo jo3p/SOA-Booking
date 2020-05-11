@@ -13,7 +13,7 @@ class Booking(Resource):
                                r["end_date"],
                                r["total_amount"])
 
-        return {"message" : "Succesfull booking!"}, 200
+        return {"message" : "Successful booking!"}, 200
 
 
 class MyBookings(Resource):
@@ -29,7 +29,7 @@ class BookingUser(Resource):
 
     def delete(self,bookingid):
         QueryDB.booking_deletion(bookingid)
-        return {"message" : "Succesfull deletion of booking!"},200
+        return {"message" : "Successful deletion of booking!"},200
 
 class QueryDB:
 

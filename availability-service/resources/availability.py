@@ -2,6 +2,7 @@ from flask_restful import Resource, reqparse
 from flask import request
 import pyodbc
 import pandas as pd
+import numpy as np
 from datetime import datetime
 
 '''
@@ -23,7 +24,7 @@ class AvailableAccomodations(Resource):
                                         r["end_date"],
                                         r["city"],
                                         r["country"],
-                                        r["n_persons"]).to_dict(orient='records')
+                                        r["n_persons"])
         return result, 200
 
 class AllAccomodations(Resource):
@@ -57,8 +58,12 @@ class QueryDB:
         filled_sql_query = open('resources/availability.sql', 'r').read().format(**query_parameters)
         query_result = pd.read_sql(filled_sql_query, connection)
         connection.close()
-
-        return query_result
+        query_dict= {'start_date': start_date}
+        query_dict['end_date'] = end_date
+        # The line below is now hardcoded to one untill we fix it
+        # Original was: str(tuple(query_result['accomodation_id'].to_list()))
+        query_dict['accomodations'] = "(1)"
+        return query_dict
 
     def retrieve_all():
         connection = pyodbc.connect(

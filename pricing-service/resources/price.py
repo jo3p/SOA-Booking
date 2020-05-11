@@ -15,12 +15,12 @@ Only works for post request with json body similar to:
 
 
 class Price(Resource):
-    def post(self):
-        r = request.get_json(force=True)
+    def get(self, start_date, end_date, accomodations):
+        # r = request.get_json(force=True)
 
-        result = QueryDB.retrieve_query(r["start_date"],
-                                        r["end_date"],
-                                        r["accomodations"]).to_dict(orient='records')
+        result = QueryDB.retrieve_query(start_date,
+                                        end_date,
+                                        accomodations).to_dict(orient='records')
         return result, 200
 
 
@@ -38,7 +38,7 @@ class QueryDB:
         query_parameters = {
             "start_date": start_date,
             "end_date": end_date,
-            "accomodations_string": accomodations_string
+            "accomodations_string":  accomodations_string
         }
 
         filled_sql_query = open('resources/price.sql', 'r').read().format(**query_parameters)

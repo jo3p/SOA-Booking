@@ -1,0 +1,39 @@
+{
+  "version": 2,
+  "output_encoding": "json",
+  "name": "QueryServices",
+  "port": 8081,
+  "endpoints": [
+    {
+      "endpoint": "/query/",
+      "method": "GET",
+      "extra_config": {
+        "github.com/devopsfaith/krakend/proxy": {
+          "sequential": true,
+          "return_error_details": "backend_alias"
+        }
+      },
+      "output_encoding": "json",
+      "backend": [
+        {
+          "url_pattern": "/availability/accomodations/",
+          "encoding": "json",
+          "method": "POST",
+          "host": [
+            "http://availability-service:5000/"
+          ],
+          "disable_host_sanitize": false
+        },
+        {
+          "url_pattern": "/price/",
+          "encoding": "json",
+          "method": "POST",
+          "host": [
+            "http://pricing-service:5000/"
+          ],
+          "disable_host_sanitize": false
+        }
+      ]
+    }
+  ]
+}

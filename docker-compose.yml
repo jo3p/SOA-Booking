@@ -36,6 +36,19 @@ services:
     ports:
       - 5005:5000
     container_name: refund-service-container
+  krakend-service:
+    image: devopsfaith/krakend:1.1.1
+    volumes:
+      - ./krakend:/etc/krakend
+    ports:
+      - 8081:8081
+      - 8082:8082
+    depends_on:
+      - availability-service
+      - pricing-service
+      - ranking-service
+      - booking-service
+      - refund-service
 #  db:
 #    environment:
 #      - ACCEPT_EULA=Y

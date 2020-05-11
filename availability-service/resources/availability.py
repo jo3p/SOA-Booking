@@ -17,7 +17,6 @@ Only works for post request with json body similar to:
 '''
 
 class AvailableAccomodations(Resource):
-    #@api.marshall_with(model, envelope='resource')
     def get(self):
         r = request.get_json(force=True)
         result = QueryDB.retrieve_query(r["start_date"],

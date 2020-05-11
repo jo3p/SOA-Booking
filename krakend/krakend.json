@@ -1,12 +1,13 @@
 {
   "version": 2,
-  "output_encoding": "json",
+  "output_encoding": "string",
   "name": "QueryServices",
   "port": 8082,
   "endpoints": [
     {
       "endpoint": "/query/",
       "method": "GET",
+      "output_encoding": "string",
       "extra_config": {
         "github.com/devopsfaith/krakend/proxy": {
         }
@@ -14,7 +15,7 @@
       "backend": [
         {
           "url_pattern": "/availability/accomodations/",
-          "encoding": "json",
+          "encoding": "string",
           "method": "GET",
           "host": [
             "http://availability-service:5000/"

@@ -15,7 +15,9 @@ Only works for post request with json body similar to:
 
 
 class Price(Resource):
-    def get(self, start_date, end_date, accomodations):
+    def get(self, accomodations):
+        start_date = request.args.get('start_date')
+        end_date = request.args.get('end_date')
         result = QueryDB.retrieve_query(start_date, end_date, accomodations)
         return result, 200
 

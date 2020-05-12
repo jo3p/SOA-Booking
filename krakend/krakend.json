@@ -6,6 +6,7 @@
   "endpoints": [
     {
       "endpoint": "/query/",
+      "querystring_params": ["start_date", "end_date", "city", "country", "n_persons"],
       "method": "GET",
       "output_encoding": "json",
       "extra_config": {
@@ -21,10 +22,23 @@
           "host": ["http://availability-service:5000/"]
         },
         {
-          "url_pattern": "/price/{start_date}/{end_date}/{resp0_accomodations}/",
+          "url_pattern": "/price/(1,2)/",
           "encoding": "json",
           "method": "GET",
           "host": ["http://pricing-service:5000/"]
+        }
+      ]
+    },
+    {
+      "endpoint": "/bookings/",
+      "method": "POST",
+      "output_encoding": "json",
+      "backend": [
+        {
+          "url_pattern": "/booking/",
+          "encoding": "json",
+          "method": "POST",
+          "host": ["http://booking-service:5000/"]
         }
       ]
     }

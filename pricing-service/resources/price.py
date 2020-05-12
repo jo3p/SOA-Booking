@@ -1,21 +1,22 @@
-from flask_restful import Resource, reqparse
-from flask import request
-import pyodbc
 import pandas as pd
+import pyodbc
+from flask import request
+from flask_restful import Resource
 
 '''
 Only works for post request with json body similar to:
 
 {
-   "start_date" : "2020-06-01",
-	"end_date" : "2020-06-04",
-	"accomodation_id" : "(1,2)"
+    "start_date" : "2020-06-01",
+    "end_date" : "2020-06-04",
+    "accomodation_id" : "(1,2)"
 }
 '''
 
 
 class Price(Resource):
-    def get(self, accomodations):
+    @staticmethod
+    def get(accomodations):
         start_date = request.args.get('start_date')
         end_date = request.args.get('end_date')
         result = QueryDB.retrieve_query(start_date, end_date, accomodations)
@@ -24,7 +25,6 @@ class Price(Resource):
 
 class QueryDB:
     def retrieve_query(start_date, end_date, accomodations_string):
-
         connection = pyodbc.connect(
             'DRIVER={FreeTDS};'
             'SERVER=34.91.7.86;'
@@ -36,7 +36,7 @@ class QueryDB:
         query_parameters = {
             "start_date": start_date,
             "end_date": end_date,
-            "accomodations_string":  accomodations_string
+            "accomodations_string": accomodations_string
         }
 
         filled_sql_query = open('resources/price.sql', 'r').read().format(**query_parameters)

@@ -1,36 +1,41 @@
-from flask_restful import Resource, reqparse
-from flask import request
-import pyodbc
-import pandas as pd
-import numpy as np
 from datetime import datetime
+
+import pandas as pd
+import pyodbc
+from flask import request
+from flask_restful import Resource
 
 '''
 Only works for post request with json body similar to:
 
 {
-	"start_date" : "2020-06-01",
-	"end_date" : "2020-06-04",
-	"city" : "Amsterdam",
-	"country" : "The Netherlands",
-	"n_persons" : 3
+    "start_date" : "2020-06-01",
+    "end_date" : "2020-06-04",
+    "city" : "Amsterdam",
+    "country" : "The Netherlands",
+    "n_persons" : 3
 }
 '''
 
+
 class AvailableAccomodations(Resource):
-    def get(self):
-        r = request.get_json(force=True)
-        # result = QueryDB.retrieve_query(r["start_date"],
-        #                                 r["end_date"],
-        #                                 r["city"],
-        #                                 r["country"],
-        #                                 r["n_persons"])
-        return r, 200
+    @staticmethod
+    def get():
+        start_date = request.args.get('start_date')
+        end_date = request.args.get('end_date')
+        city = request.args.get('city')
+        country = request.args.get('country')
+        n_persons = request.args.get('n_persons')
+        result = QueryDB.retrieve_query(start_date, end_date, city, country, n_persons)
+        return result, 200
+
 
 class AllAccomodations(Resource):
-    def get(self):
+    @staticmethod
+    def get():
         result = QueryDB.retrieve_all().to_dict(orient='records')
         return result
+
 
 class QueryDB:
     def retrieve_query(start_date, end_date, city, country, n_persons):
@@ -58,13 +63,10 @@ class QueryDB:
         filled_sql_query = open('resources/availability.sql', 'r').read().format(**query_parameters)
         query_result = pd.read_sql(filled_sql_query, connection)
         connection.close()
-        query_dict= {'start_date': start_date}
-        query_dict['end_date'] = end_date
-        # The line below is now hardcoded to one untill we fix it
-        # Original was: str(tuple(query_result['accomodation_id'].to_list()))
-        query_dict['accomodations'] = "(1)"
-        return query_dict
+        result = {'accomodations': str(tuple(query_result['accomodation_id'].to_list()))}
+        return result
 
+    @staticmethod
     def retrieve_all():
         connection = pyodbc.connect(
             'DRIVER={FreeTDS};'
@@ -78,4 +80,3 @@ class QueryDB:
         query_result = pd.read_sql(filled_sql_query, connection)
         connection.close()
         return query_result
-

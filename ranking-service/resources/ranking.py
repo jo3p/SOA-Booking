@@ -13,7 +13,7 @@ Only works for post request with json body similar to:
 
 
 class Ranks(Resource):
-    def post(self):
+    def get(self):
         r = request.get_json(force=True)
         result = QueryDB.retrieve_query(r["accomodations"]).to_dict(orient='records')
         return result, 200
@@ -36,6 +36,7 @@ class QueryDB:
 
         filled_sql_query = open('resources/ranking.sql', 'r').read().format(**query_parameters)
         query_result = pd.read_sql(filled_sql_query, connection)
+
         connection.close()
 
         return query_result

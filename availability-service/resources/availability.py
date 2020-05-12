@@ -19,13 +19,13 @@ Only works for post request with json body similar to:
 
 class AvailableAccomodations(Resource):
     def get(self):
-        start_date = request.args.get('start_date')
-        end_date = request.args.get('end_date')
-        city = request.args.get('city')
-        country = request.args.get('country')
-        n_persons = request.args.get('n_persons')
-        result = QueryDB.retrieve_query(start_date, end_date, city, country, n_persons)
-        return result, 200
+        r = request.get_json(force=True)
+        # result = QueryDB.retrieve_query(r["start_date"],
+        #                                 r["end_date"],
+        #                                 r["city"],
+        #                                 r["country"],
+        #                                 r["n_persons"])
+        return r, 200
 
 class AllAccomodations(Resource):
     def get(self):
@@ -58,8 +58,12 @@ class QueryDB:
         filled_sql_query = open('resources/availability.sql', 'r').read().format(**query_parameters)
         query_result = pd.read_sql(filled_sql_query, connection)
         connection.close()
-        result = {'accomodations': str(tuple(query_result['accomodation_id'].to_list()))}
-        return result
+        query_dict= {'start_date': start_date}
+        query_dict['end_date'] = end_date
+        # The line below is now hardcoded to one untill we fix it
+        # Original was: str(tuple(query_result['accomodation_id'].to_list()))
+        query_dict['accomodations'] = "(1)"
+        return query_dict
 
     def retrieve_all():
         connection = pyodbc.connect(
@@ -73,6 +77,5 @@ class QueryDB:
         filled_sql_query = open('resources/allavailability.sql', 'r').read()
         query_result = pd.read_sql(filled_sql_query, connection)
         connection.close()
-
         return query_result
 

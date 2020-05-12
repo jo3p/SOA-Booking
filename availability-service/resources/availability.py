@@ -20,12 +20,12 @@ Only works for post request with json body similar to:
 class AvailableAccomodations(Resource):
     def get(self):
         r = request.get_json(force=True)
-        result = QueryDB.retrieve_query(r["start_date"],
-                                        r["end_date"],
-                                        r["city"],
-                                        r["country"],
-                                        r["n_persons"])
-        return result, 200
+        # result = QueryDB.retrieve_query(r["start_date"],
+        #                                 r["end_date"],
+        #                                 r["city"],
+        #                                 r["country"],
+        #                                 r["n_persons"])
+        return r, 200
 
 class AllAccomodations(Resource):
     def get(self):
@@ -77,6 +77,5 @@ class QueryDB:
         filled_sql_query = open('resources/allavailability.sql', 'r').read()
         query_result = pd.read_sql(filled_sql_query, connection)
         connection.close()
-
         return query_result
 

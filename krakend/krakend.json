@@ -22,7 +22,7 @@
           "host": ["http://availability-service:5000/"]
         },
         {
-          "url_pattern": "/price/(1,2)/",
+          "url_pattern": "/price/{resp0_accomodations}/",
           "encoding": "json",
           "method": "GET",
           "host": ["http://pricing-service:5000/"]

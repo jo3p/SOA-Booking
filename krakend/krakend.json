@@ -25,7 +25,14 @@
           "url_pattern": "/",
           "encoding": "json",
           "method": "GET",
-          "host": "http://availability-service:5000"
+          "host": "http://availability-service:5000",
+          "extra_config":{
+            "github.com/devopsfaith/krakend-cel": [
+            {
+            "check_expr": "'accomodations' in resp_data"
+            }
+          ]
+          }
         },
         {
           "url_pattern": "/?accomodations={resp0_accomodations}",

@@ -5,7 +5,6 @@ import pandas as pd
 
 '''
 Only works for post request with json body similar to:
-
 {
   "accomodations": "(3,5,1,4,2)",
   "prices": "(60,100,100,120,200)",
@@ -55,5 +54,5 @@ class MergeQueries:
 
         # Rearange the order
         ranked_db = ranked_db[['name', 'city', 'country', 'prices', 'review_scores']]
-        ranked_db.columns = ['Name', 'City', 'Country', 'Price', 'Review Score']
+        ranked_db.columns = ['Name', 'City', 'Country', 'Price p.p', 'Review Score']
         return ranked_db

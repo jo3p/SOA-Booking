@@ -4,7 +4,7 @@ import pyodbc
 import pandas as pd
 import time
 
-class Booking(Resource):
+class PlaceBooking(Resource):
     def post(self):
         r = request.get_json(force=True)
         QueryDB.insert_booking(r["accomodation"],
@@ -13,23 +13,21 @@ class Booking(Resource):
                                r["end_date"],
                                r["total_amount"])
 
-        return {"message" : "Successful booking!"}, 200
+        return {"message" : "Successful booking!"}, 200  # TODO: check if booking exists
 
 
 class MyBookings(Resource):
-    def get(self,userid):
+    def get(self):
+        userid = request.args.get('userid')
         result = QueryDB.my_bookings(userid).to_dict(orient='records')
         return result, 200
 
 
-class BookingUser(Resource):
-    def get(self,bookingid):
+class BookingDetails(Resource):
+    def get(self):
+        bookingid = request.args.get('bookingid')
         result = QueryDB.booking_details(bookingid).to_dict(orient='records')
         return result, 200
-
-    def delete(self,bookingid):
-        QueryDB.booking_deletion(bookingid)
-        return {"message" : "Successful deletion of booking!"},200
 
 class QueryDB:
 

@@ -1,5 +1,5 @@
 import time
-
+import random
 import pandas as pd
 import pyodbc
 from flask import request
@@ -39,14 +39,14 @@ class Refund(Resource):
     @staticmethod
     def put():
         bookingid = request.args.get('bookingid')
-        QueryDB.start_refund(bookingid)
+        result = QueryDB.start_refund(bookingid)
         # return message:
-        return {"message": "success"}, 200
+        return result, 200
 
     @staticmethod
     def get():
-        refundid = request.args.get('refundid')
-        result = QueryDB.booking_details(refundid).to_dict(orient='records')
+        refund = request.args.get('refundid')
+        result = QueryDB.refund_status(refund)
         return result, 200
 
 
@@ -125,9 +125,54 @@ class QueryDB:
 
         query_parameters = {"bookingid": bookingid}
 
-        filled_sql_query = open('resources/booking4.sql', 'r').read().format(**query_parameters)
+        query1 = open('resources/booking_exist.sql', 'r').read().format(**query_parameters)
+        query1result = pd.read_sql(query1, connection)
+
+        if query1result.iat[0,0]==0:
+            connection.close()
+            return {"message" : "Booking does not exist"}
+
+        query2 = open('resources/booking3.sql', 'r').read().format(**query_parameters)
+        #now this query2result is EXACTLY one row of the booking database
+        query2result = pd.read_sql(query2, connection)
+
+        if query2result.iat[0,6]==1:
+            return {"message" : "Booking has already been refunded"}
+
+        #update the booking table
+        set_booking_refunded_query = open('resources/booking_set_refunded.sql', 'r').read().format(**query_parameters)
 
         cur = connection.cursor()
-        cur.execute(filled_sql_query)
+        cur.execute(set_booking_refunded_query)
+
+        #create new entry in refund table
+        query_parameters["refundid"] = str(bookingid + str(int(time.time())))
+        query_parameters["amount"] = query2result.iat[0,7]
+        query_parameters["randomdays"] = random.randint(1, 7)
+        add_entry_refund_query = open('resources/add_entry_refund_query.sql', 'r').read().format(**query_parameters)
+        cur.execute(add_entry_refund_query)
+
         connection.commit()
         connection.close()
+
+        return {"message" : "Refund succesfully initiated and logged!"}
+
+    def refund_status(refundid):
+        connection = pyodbc.connect(
+            'DRIVER={FreeTDS};'
+            'SERVER=34.91.7.86;'
+            'PORT=1433;'
+            'DATABASE=IS-database;'
+            'UID=SA;'
+            'PWD=Innov@t1onS', autocommit=True)
+
+        query_parameters = {"refundid": refundid}
+
+        filled_sql_query = open('resources/refund_details.sql', 'r').read().format(**query_parameters)
+        query_result = pd.read_sql(filled_sql_query, connection).to_dict(orient='records')
+        connection.close()
+
+        if len(query_result)==0:
+            return {"message" : "RefundID not found"}
+
+        return query_result[0]

@@ -6,7 +6,13 @@
   "endpoints": [
     {
       "endpoint": "/query/",
-      "querystring_params": ["start_date", "end_date", "city", "country", "n_persons"],
+      "querystring_params": [
+        "start_date",
+        "end_date",
+        "city",
+        "country",
+        "n_persons"
+      ],
       "method": "GET",
       "output_encoding": "json",
       "extra_config": {
@@ -19,13 +25,13 @@
           "url_pattern": "/availability/accomodations/",
           "encoding": "json",
           "method": "GET",
-          "host": ["http://availability-service:5000/"]
+          "host": "http://availability-service:5000/"
         },
         {
-          "url_pattern": "/price/{resp0_accomodations}/",
+          "url_pattern": "/price/?accomodations={resp0_accomodations}",
           "encoding": "json",
           "method": "GET",
-          "host": ["http://pricing-service:5000/"]
+          "host": "http://pricing-service:5000/"
         }
       ]
     },
@@ -33,14 +39,26 @@
       "endpoint": "/bookings/",
       "method": "POST",
       "output_encoding": "json",
-      "backend": [
-        {
-          "url_pattern": "/booking/",
-          "encoding": "json",
-          "method": "POST",
-          "host": ["http://booking-service:5000/"]
-        }
-      ]
+      "backend": {
+        "url_pattern": "/booking/",
+        "encoding": "json",
+        "method": "POST",
+        "host": "http://booking-service:5000/"
+      }
+    },
+    {
+      "endpoint": "/refund/",
+      "querystring_params": [
+        "*"
+      ],
+      "method": "POST",
+      "output_encoding": "json",
+      "backend": {
+        "url_pattern": "/",
+        "encoding": "json",
+        "method": "POST",
+        "host": "http://refund-service:5000/"
+      }
     }
   ]
 }

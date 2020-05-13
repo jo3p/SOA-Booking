@@ -3,16 +3,6 @@ import pyodbc
 from flask import request
 from flask_restful import Resource
 
-'''
-Only works for post request with json body similar to:
-
-{
-    "start_date" : "2020-06-01",
-    "end_date" : "2020-06-04",
-    "accomodation_id" : "(1,2)"
-}
-'''
-
 
 class Price(Resource):
     @staticmethod

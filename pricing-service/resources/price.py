@@ -23,17 +23,10 @@ class QueryDB:
             'DATABASE=IS-database;'
             'UID=SA;'
             'PWD=Innov@t1onS', autocommit=True)
-
-        query_parameters = {
-            "start_date": start_date,
-            "end_date": end_date,
-            "accomodations_string": accomodations_string
-        }
-
+        query_parameters = {"start_date": start_date, "end_date": end_date, "accomodations_string": accomodations_string}
         filled_sql_query = open('resources/price.sql', 'r').read().format(**query_parameters)
         query_result = pd.read_sql(filled_sql_query, connection)
         result = {'accomodations': str(tuple(query_result['accomodation_id'].to_list())).replace(" ", ""),
                   'prices': str(tuple(query_result['total_price'].to_list())).replace(" ", "")}
         connection.close()
-
         return result

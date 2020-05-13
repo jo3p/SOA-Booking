@@ -1,7 +1,6 @@
 FROM python:3
 
 WORKDIR /usr/src/app
-
 ADD requirements.txt .
 ADD run.py .
 
@@ -21,6 +20,4 @@ Driver = /usr/lib/x86_64-linux-gnu/odbc/libtdsodbc.so\n\
 Setup = /usr/lib/x86_64-linux-gnu/odbc/libtdsS.so" >> /etc/odbcinst.ini
 
 RUN pip install -r requirements.txt
-
 CMD ["python","-i","run.py"]
-#CMD tail -f /dev/null

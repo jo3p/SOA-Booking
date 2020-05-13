@@ -3,15 +3,6 @@ from flask import request
 import pyodbc
 import pandas as pd
 
-'''
-Only works for post request with json body similar to:
-
-{
-	"accomodations" : "(1,2)",
-	"prices" : "(100,200)"
-}
-'''
-
 
 class Ranks(Resource):
     def get(self):
@@ -37,6 +28,7 @@ class QueryDB:
         connection.close()
         return query_result
 
+
 class RankAccomodations:
     def ranking(query_results, prices):
         prices = prices.replace("(", "").replace(")", "")
@@ -44,7 +36,6 @@ class RankAccomodations:
         query_results['prices'] = prices
         query_results = query_results.sort_values(["prices", "commission_paid", "review_score", "amount_of_bookings"],
                                                   ascending = (True, False, False, False))
-
         return_query = {"accomodations": str(tuple(query_results["accomodation_id"].to_list())).replace(" ", ""),
                         "prices": str(tuple(query_results["prices"].to_list())).replace(" ", ""),
                         "review_scores": str(tuple(query_results['review_score'].to_list())).replace(" ", "")}

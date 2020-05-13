@@ -2,7 +2,7 @@
   "version": 2,
   "output_encoding": "json",
   "name": "QueryServices",
-  "port": 8082,
+  "port": 5010,
   "endpoints": [
     {
       "endpoint": "/query/",
@@ -111,6 +111,30 @@
         "mapping": {
           "collection": "Booking details"
         }
+      }
+    },
+    {
+      "endpoint": "/start_refund/",
+      "querystring_params": "bookingid",
+      "method": "PUT",
+      "output_encoding": "json",
+      "backend": {
+        "url_pattern": "/refunds/",
+        "encoding": "json",
+        "method": "PUT",
+        "host": "http://booking-service:5000"
+      }
+    },
+    {
+      "endpoint": "/refund_status/",
+      "querystring_params": "refundid",
+      "method": "GET",
+      "output_encoding": "json",
+      "backend": {
+        "url_pattern": "/refunds/",
+        "encoding": "json",
+        "method": "GET",
+        "host": "http://booking-service:5000"
       }
     }
   ]

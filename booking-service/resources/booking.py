@@ -35,18 +35,18 @@ class BookingDetails(Resource):
         return result, 200
 
 
-class StartRefund(Resource):
+class Refund(Resource):
     @staticmethod
     def put():
         bookingid = request.args.get('bookingid')
-        result = QueryDB.start_refund(bookingid).to_dict(orient='records')
+        QueryDB.start_refund(bookingid)
         # return message:
-        return result, 200
+        return {"message": "success"}, 200
 
     @staticmethod
     def get():
-        refund = request.args.get('refundid')
-        result = QueryDB.booking_details(bookingid).to_dict(orient='records')
+        refundid = request.args.get('refundid')
+        result = QueryDB.booking_details(refundid).to_dict(orient='records')
         return result, 200
 
 
@@ -131,5 +131,3 @@ class QueryDB:
         cur.execute(filled_sql_query)
         connection.commit()
         connection.close()
-
-    def booking_status(refundid):

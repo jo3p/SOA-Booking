@@ -7,7 +7,7 @@ import pandas as pd
 Only works for post request with json body similar to:
 
 {
-	"accomodations" : "(1,2)"
+	"accomodations" : "(1,2)",
 	"prices" : "(100,200)" # let op dit is een list
 }
 '''

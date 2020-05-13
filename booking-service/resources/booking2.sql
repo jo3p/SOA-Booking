@@ -1,3 +1,4 @@
-SELECT accomodation_id, start_date, end_date
+SELECT Bookings.booking_id, Bookings.start_date, Bookings.end_date, Accomodations.Name
 FROM Bookings
-WHERE user_id = {userid};
+         INNER JOIN Accomodations ON Bookings.accomodation_id = Accomodations.accomodation_id
+WHERE Bookings.user_id = {userid};

@@ -46,7 +46,7 @@
         "host": "http://availability-service:5000",
         "is_collection": true,
         "mapping": {
-          "collection": "all acoomodations"
+          "collection": "All accomodations"
         }
       }
     },
@@ -70,7 +70,11 @@
         "url_pattern": "/my_bookings/",
         "encoding": "json",
         "method": "GET",
-        "host": "http://booking-service:5000"
+        "host": "http://booking-service:5000",
+        "is_collection": true,
+        "mapping": {
+          "collection": "My bookings"
+        }
       }
     },
     {
@@ -82,7 +86,11 @@
         "url_pattern": "/booking_details/",
         "encoding": "json",
         "method": "GET",
-        "host": "http://booking-service:5000"
+        "host": "http://booking-service:5000",
+        "is_collection": true,
+        "mapping": {
+          "collection": "Booking details"
+        }
       }
     }
   ]

@@ -1,4 +1,0 @@
-pyodbc
-pandas
-flask
-flask-restful

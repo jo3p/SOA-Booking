@@ -16,9 +16,10 @@ Only works for post request with json body similar to:
 
 class Price(Resource):
     @staticmethod
-    def get(accomodations):
+    def get():
         start_date = request.args.get('start_date')
         end_date = request.args.get('end_date')
+        accomodations = request.args.get('accomodations')
         result = QueryDB.retrieve_query(start_date, end_date, accomodations)
         return result, 200
 
@@ -41,8 +42,8 @@ class QueryDB:
 
         filled_sql_query = open('resources/price.sql', 'r').read().format(**query_parameters)
         query_result = pd.read_sql(filled_sql_query, connection)
-        result = {'accomodations': str(tuple(query_result['accomodation_id'].to_list())),
-                  'prices': str(tuple(query_result['total_price'].to_list()))}
+        result = {'accomodations': str(tuple(query_result['accomodation_id'].to_list())).replace(" ", ""),
+                  'prices': str(tuple(query_result['total_price'].to_list())).replace(" ", "")}
         connection.close()
 
         return result

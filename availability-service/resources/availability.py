@@ -63,7 +63,7 @@ class QueryDB:
         filled_sql_query = open('resources/availability.sql', 'r').read().format(**query_parameters)
         query_result = pd.read_sql(filled_sql_query, connection)
         connection.close()
-        result = {'accomodations': str(tuple(query_result['accomodation_id'].to_list()))}
+        result = {'accomodations': str(tuple(query_result['accomodation_id'].to_list())).replace(" ", "")}
         return result
 
     @staticmethod

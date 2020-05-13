@@ -32,6 +32,19 @@
           "encoding": "json",
           "method": "GET",
           "host": "http://pricing-service:5000"
+        },
+        {
+          "url_pattern": "/?accomodations={resp0_accomodations}&prices={resp0_prices}",
+          "encoding": "json",
+          "method": "GET",
+          "host": "http://ranking-service:5000"
+        },
+        {
+          "url_pattern": "/?accomodations={resp0_accomodations}&prices={resp0_prices}&review_scores={resp0_review_scores}",
+          "encoding": "json",
+          "method": "GET",
+          "host": "http://query-display-service:5000",
+          "is_collection": true
         }
       ]
     },

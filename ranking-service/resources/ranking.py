@@ -8,16 +8,17 @@ Only works for post request with json body similar to:
 
 {
 	"accomodations" : "(1,2)",
-	"prices" : "(100,200)" # let op dit is een list
+	"prices" : "(100,200)"
 }
 '''
 
 
 class Ranks(Resource):
-    def get(self):  # hier variabelen meegeven
-        r = request.get_json(force=True)  # moet straks weg
-        query = QueryDB.retrieve_query(r["accomodations"]) #.to_dict(orient='records')  # variabelen invoegen en to_dict weg
-        result = RankAccomodations.ranking(query, r["prices"]) #.to_dict(orient='records')
+    def get(self):
+        accomodations = request.args.get('accomodations')
+        prices = request.args.get('prices')
+        query = QueryDB.retrieve_query(accomodations)
+        result = RankAccomodations.ranking(query, prices)
         return result, 200
 
 
@@ -46,5 +47,5 @@ class RankAccomodations:
 
         return_query = {"accomodations": str(tuple(query_results["accomodation_id"].to_list())).replace(" ", ""),
                         "prices": str(tuple(query_results["prices"].to_list())).replace(" ", ""),
-                        "review_scores": str(tuple(query_results['review_score'].to_list())).replace("  ", "")}
-        return return_query#query_results
+                        "review_scores": str(tuple(query_results['review_score'].to_list())).replace(" ", "")}
+        return return_query

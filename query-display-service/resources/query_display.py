@@ -14,13 +14,15 @@ Only works for post request with json body similar to:
 
 
 class QueryDisplay(Resource):
-    def get(self):  # hier variabelen meegeven
-        r = request.get_json(force=True)  # moet straks weg
-        query = QueryDB.retrieve_query(r["accomodations"]) # .to_dict(orient='records')  # variabelen invoegen en to_dict weg
+    def get(self):
+        accomodations = request.args.get('accomodations')
+        prices = request.args.get('prices')
+        review_scores = request.args.get('review_scores')
+        query = QueryDB.retrieve_query(accomodations)
         result = MergeQueries.merge(query,
-                                    r["accomodations"],
-                                    r["prices"],
-                                    r["review_scores"]).to_dict(orient='records')
+                                    accomodations,
+                                    prices,
+                                    review_scores).to_dict(orient='records')
         return result, 200
 
 
@@ -51,7 +53,6 @@ class MergeQueries:
         ranked_db = ranked_db.merge(query_results, how='left', left_on="accomodations",
                                     right_on='accomodation_id')
         ranked_db.drop(['accomodations', 'accomodation_id'], axis=1, inplace=True)
-
         # Rearange the order
         ranked_db = ranked_db[['name', 'city', 'country', 'prices', 'review_scores']]
         ranked_db.columns = ['Name', 'City', 'Country', 'Price p.p', 'Review Score']

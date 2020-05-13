@@ -44,7 +44,10 @@
           "encoding": "json",
           "method": "GET",
           "host": "http://query-display-service:5000",
-          "is_collection": true
+          "is_collection": true,
+          "mapping": {
+            "collection": "Query results"
+          }
         }
       ]
     },

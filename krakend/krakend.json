@@ -47,13 +47,9 @@
           "is_collection": true,
           "mapping": {
             "collection": "Query results"
-          },
-          "whitelist": [
-            "collection"
-          ]
+          }
         }
-      ],
-      "whitelist": "Query results"
+      ]
     },
     {
       "endpoint": "/all_accomodations/",

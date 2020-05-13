@@ -73,7 +73,7 @@ class QueryDB:
             "total_amount": total_amount
         }
 
-        filled_sql_query = open('resources/booking.sql', 'r').read().format(**query_parameters)
+        filled_sql_query = open('resources/insert_booking.sql', 'r').read().format(**query_parameters)
 
         cur = connection.cursor()
         cur.execute(filled_sql_query)
@@ -91,7 +91,7 @@ class QueryDB:
 
         query_parameters = {"userid": userid}
 
-        filled_sql_query = open('resources/booking2.sql', 'r').read().format(**query_parameters)
+        filled_sql_query = open('resources/my_bookings.sql', 'r').read().format(**query_parameters)
         query_result = pd.read_sql(filled_sql_query, connection)
         connection.close()
 
@@ -108,7 +108,7 @@ class QueryDB:
 
         query_parameters = {"bookingid": bookingid}
 
-        filled_sql_query = open('resources/booking3.sql', 'r').read().format(**query_parameters)
+        filled_sql_query = open('resources/booking_details.sql', 'r').read().format(**query_parameters)
         query_result = pd.read_sql(filled_sql_query, connection)
         connection.close()
 
@@ -132,7 +132,7 @@ class QueryDB:
             connection.close()
             return {"message" : "Booking does not exist"}
 
-        query2 = open('resources/booking3.sql', 'r').read().format(**query_parameters)
+        query2 = open('resources/booking_details.sql', 'r').read().format(**query_parameters)
         #now this query2result is EXACTLY one row of the booking database
         query2result = pd.read_sql(query2, connection)
 

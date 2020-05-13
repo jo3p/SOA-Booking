@@ -42,7 +42,6 @@ class Refund(Resource):
     def put():
         bookingid = request.args.get('bookingid')
         result = QueryDB.start_refund(bookingid)
-        # return message:
         return result, 200
 
     @staticmethod
@@ -138,7 +137,7 @@ class QueryDB:
         #now this query2result is EXACTLY one row of the booking database
         query2result = pd.read_sql(query2, connection)
 
-        if query2result.iat[0,6]==1:
+        if query2result.iat[0,5] == 1:
             return {"message" : "Booking has already been refunded"}
 
         #update the booking table
@@ -149,7 +148,7 @@ class QueryDB:
 
         #create new entry in refund table
         query_parameters["refundid"] = str(bookingid + str(int(time.time())))
-        query_parameters["amount"] = query2result.iat[0,7]
+        query_parameters["amount"] = query2result.iat[0, 4]
         query_parameters["randomdays"] = random.randint(1, 7)
         add_entry_refund_query = open('resources/add_entry_refund_query.sql', 'r').read().format(**query_parameters)
         cur.execute(add_entry_refund_query)

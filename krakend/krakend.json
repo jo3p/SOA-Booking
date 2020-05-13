@@ -34,22 +34,26 @@
           "host": "http://pricing-service:5000"
         },
         {
-          "url_pattern": "/?accomodations={resp0_accomodations}&prices={resp0_prices}",
+          "url_pattern": "/?accomodations={resp1_accomodations}&prices={resp1_prices}",
           "encoding": "json",
           "method": "GET",
           "host": "http://ranking-service:5000"
         },
         {
-          "url_pattern": "/?accomodations={resp0_accomodations}&prices={resp0_prices}&review_scores={resp0_review_scores}",
+          "url_pattern": "/?accomodations={resp2_accomodations}&prices={resp2_prices}&review_scores={resp2_review_scores}",
           "encoding": "json",
           "method": "GET",
           "host": "http://query-display-service:5000",
           "is_collection": true,
           "mapping": {
             "collection": "Query results"
-          }
+          },
+          "whitelist": [
+            "collection"
+          ]
         }
-      ]
+      ],
+      "whitelist": "Query results"
     },
     {
       "endpoint": "/all_accomodations/",

@@ -1,2 +1,3 @@
-DELETE FROM Bookings
-WHERE booking_id='{bookingid}';
+UPDATE Bookings
+SET is_refunded = 1
+WHERE booking_id = '{bookingid}';

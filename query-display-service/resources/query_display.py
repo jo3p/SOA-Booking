@@ -23,6 +23,7 @@ class QueryDisplay(Resource):
                                     accomodations,
                                     prices,
                                     review_scores).to_dict(orient='records')
+
         return result, 200
 
 
@@ -56,4 +57,7 @@ class MergeQueries:
         # Rearange the order
         ranked_db = ranked_db[['name', 'city', 'country', 'prices', 'review_scores']]
         ranked_db.columns = ['Name', 'City', 'Country', 'Price p.p', 'Review Score']
+        del accomodations
+        del prices
+        del review_scores
         return ranked_db

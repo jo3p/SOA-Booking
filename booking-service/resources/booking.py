@@ -35,6 +35,21 @@ class BookingDetails(Resource):
         return result, 200
 
 
+class StartRefund(Resource):
+    @staticmethod
+    def put():
+        bookingid = request.args.get('bookingid')
+        result = QueryDB.start_refund(bookingid).to_dict(orient='records')
+        # return message:
+        return result, 200
+
+    @staticmethod
+    def get():
+        refund = request.args.get('refundid')
+        result = QueryDB.booking_details(bookingid).to_dict(orient='records')
+        return result, 200
+
+
 class QueryDB:
 
     def insert_booking(accomodation, userid, start_date, end_date, total_amount):
@@ -99,7 +114,7 @@ class QueryDB:
 
         return query_result
 
-    def booking_deletion(bookingid):
+    def start_refund(bookingid):
         connection = pyodbc.connect(
             'DRIVER={FreeTDS};'
             'SERVER=34.91.7.86;'
@@ -116,3 +131,5 @@ class QueryDB:
         cur.execute(filled_sql_query)
         connection.commit()
         connection.close()
+
+    def booking_status(refundid):

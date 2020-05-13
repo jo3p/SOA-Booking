@@ -26,12 +26,12 @@
           "encoding": "json",
           "method": "GET",
           "host": "http://availability-service:5000",
-          "extra_config":{
+          "extra_config": {
             "github.com/devopsfaith/krakend-cel": [
-            {
-            "check_expr": "'accomodations' in resp_data"
-            }
-          ]
+              {
+                "check_expr": "'accomodations' in resp_data"
+              }
+            ]
           }
         },
         {
@@ -109,11 +109,7 @@
         "url_pattern": "/booking_details/",
         "encoding": "json",
         "method": "GET",
-        "host": "http://booking-service:5000",
-        "is_collection": true,
-        "mapping": {
-          "collection": "Booking details"
-        }
+        "host": "http://booking-service:5000"
       }
     },
     {

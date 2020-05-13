@@ -52,7 +52,7 @@ class QueryDB:
         query_result = pd.read_sql(filled_sql_query, connection)
         connection.close()
         if len(query_result) == 0:
-            result = {"NoResults": "NoResults"}
+            result = {"Query results": "No results found"}
         else:
             result = {'accomodations': str(tuple(query_result['accomodation_id'].to_list())).replace(" ", "")}
         return result

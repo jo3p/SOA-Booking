@@ -31,8 +31,10 @@ class BookingDetails(Resource):
     @staticmethod
     def get():
         bookingid = request.args.get('bookingid')
-        result = QueryDB.booking_details(bookingid).to_dict(orient='records')
-        return result, 200
+        result = QueryDB.booking_details(bookingid)
+        if len(result) == 0:
+            return {"Message": "Booking not found."}, 200
+        return result.to_dict(orient='records')[0], 200
 
 
 class Refund(Resource):

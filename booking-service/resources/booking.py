@@ -143,5 +143,5 @@ class QueryDB:
         connection.close()
 
         if len(query_result) == 0:
-            return {"message": "RefundID not found"}
+            return {"message": "Refund not found"}
         return query_result[0]

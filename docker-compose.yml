@@ -36,6 +36,13 @@ services:
     ports:
       - 5005:5000
     container_name: refund-service-container
+#  query-display-service:
+#    build: query-display-service/
+#    volumes:
+#      - ./query-display-service:/usr/src/app
+#    ports:
+#      - 5005:5000
+#    container_name: query-display-service-container
   krakend-service:
     image: devopsfaith/krakend:1.1.1
     volumes:

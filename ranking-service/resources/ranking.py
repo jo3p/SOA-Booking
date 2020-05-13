@@ -8,8 +8,7 @@ Only works for post request with json body similar to:
 
 {
 	"accomodations" : "(1,2)"
-	"prices" : [100,200] # let op dit is een list
-	Er moet sowieso nog ingebouwd worden dat de prices vanuit pricing worden meegegeven als list ipv string tuple
+	"prices" : "(100,200)" # let op dit is een list
 }
 '''
 
@@ -39,16 +38,12 @@ class QueryDB:
 
 class RankAccomodations:
     def ranking(query_results, prices):
-        prices = prices.replace("(", "")
-        prices = prices.replace(")", "")
-        prices = tuple(map(int, prices.split(',')))
-        prices = list(prices)
+        prices = prices.replace("(", "").replace(")", "")
+        prices = list(tuple(map(int, prices.split(','))))
         query_results['prices'] = prices
         query_results = query_results.sort_values(["prices", "commission_paid", "review_score", "amount_of_bookings"],
                                                   ascending = (True, False, False, False))
-        """
-        Doen: output omschrijven naar {"acc_ids: [1,2,3], prices:[100,200,300]}
-        """
+
         return_query = {"accomodations": str(tuple(query_results["accomodation_id"].to_list())).replace(" ", ""),
                         "prices": str(tuple(query_results["prices"].to_list())).replace(" ", ""),
                         "review_scores": str(tuple(query_results['review_score'].to_list())).replace("  ", "")}

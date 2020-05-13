@@ -15,8 +15,7 @@ class PlaceBooking(Resource):
                                r["start_date"],
                                r["end_date"],
                                r["total_amount"])
-
-        return {"message": "Successful booking!"}, 200  # TODO: check if booking exists
+        return {"message": "Successful booking!"}, 200
 
 
 class MyBookings(Resource):
@@ -52,11 +51,9 @@ class Refund(Resource):
 
 
 class QueryDB:
-
     def insert_booking(accomodation, userid, start_date, end_date, total_amount):
         bookingid = str(str(userid) + str(int(time.time())))
         time.sleep(1)
-
         connection = pyodbc.connect(
             'DRIVER={FreeTDS};'
             'SERVER=34.91.7.86;'
@@ -64,18 +61,9 @@ class QueryDB:
             'DATABASE=IS-database;'
             'UID=SA;'
             'PWD=Innov@t1onS', autocommit=True)
-
-        query_parameters = {
-            "bookingid": bookingid,
-            "accomodation": accomodation,
-            "userid": userid,
-            "start_date": start_date,
-            "end_date": end_date,
-            "total_amount": total_amount
-        }
-
+        query_parameters = {"bookingid": bookingid, "accomodation": accomodation, "userid": userid,
+                            "start_date": start_date, "end_date": end_date, "total_amount": total_amount}
         filled_sql_query = open('resources/insert_booking.sql', 'r').read().format(**query_parameters)
-
         cur = connection.cursor()
         cur.execute(filled_sql_query)
         connection.commit()
@@ -89,13 +77,10 @@ class QueryDB:
             'DATABASE=IS-database;'
             'UID=SA;'
             'PWD=Innov@t1onS', autocommit=True)
-
         query_parameters = {"userid": userid}
-
         filled_sql_query = open('resources/my_bookings.sql', 'r').read().format(**query_parameters)
         query_result = pd.read_sql(filled_sql_query, connection)
         connection.close()
-
         return query_result
 
     def booking_details(bookingid):
@@ -106,13 +91,10 @@ class QueryDB:
             'DATABASE=IS-database;'
             'UID=SA;'
             'PWD=Innov@t1onS', autocommit=True)
-
         query_parameters = {"bookingid": bookingid}
-
         filled_sql_query = open('resources/booking_details.sql', 'r').read().format(**query_parameters)
         query_result = pd.read_sql(filled_sql_query, connection)
         connection.close()
-
         return query_result
 
     def start_refund(bookingid):
@@ -123,40 +105,29 @@ class QueryDB:
             'DATABASE=IS-database;'
             'UID=SA;'
             'PWD=Innov@t1onS', autocommit=True)
-
         query_parameters = {"bookingid": bookingid}
-
         query1 = open('resources/booking_exist.sql', 'r').read().format(**query_parameters)
         query1result = pd.read_sql(query1, connection)
-
-        if query1result.iat[0,0]==0:
+        if query1result.iat[0, 0] == 0:
             connection.close()
-            return {"message" : "Booking does not exist"}
-
+            return {"message": "Booking does not exist"}
         query2 = open('resources/booking_details.sql', 'r').read().format(**query_parameters)
-        #now this query2result is EXACTLY one row of the booking database
         query2result = pd.read_sql(query2, connection)
-
         if query2result.loc[0, 'refunded'] == 1:
-            return {"message" : "Booking has already been refunded"}
-
-        #update the booking table
+            return {"message": "Booking has already been refunded"}
+        # Update the booking table
         set_booking_refunded_query = open('resources/booking_set_refunded.sql', 'r').read().format(**query_parameters)
-
         cur = connection.cursor()
         cur.execute(set_booking_refunded_query)
-
-        #create new entry in refund table
+        # create new entry in refund table
         query_parameters["refundid"] = str(bookingid + str(int(time.time())))
         query_parameters["amount"] = query2result.loc[0, 'total_amount']
         query_parameters["randomdays"] = random.randint(1, 7)
         add_entry_refund_query = open('resources/add_entry_refund_query.sql', 'r').read().format(**query_parameters)
         cur.execute(add_entry_refund_query)
-
         connection.commit()
         connection.close()
-
-        return {"message" : "Refund succesfully initiated and logged!"}
+        return {"message": "Refund successfully initiated and logged!"}
 
     def refund_status(refundid):
         connection = pyodbc.connect(
@@ -166,14 +137,11 @@ class QueryDB:
             'DATABASE=IS-database;'
             'UID=SA;'
             'PWD=Innov@t1onS', autocommit=True)
-
         query_parameters = {"refundid": refundid}
-
         filled_sql_query = open('resources/refund_details.sql', 'r').read().format(**query_parameters)
         query_result = pd.read_sql(filled_sql_query, connection).to_dict(orient='records')
         connection.close()
 
-        if len(query_result)==0:
-            return {"message" : "RefundID not found"}
-
+        if len(query_result) == 0:
+            return {"message": "RefundID not found"}
         return query_result[0]
